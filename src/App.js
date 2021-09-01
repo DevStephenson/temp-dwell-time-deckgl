@@ -1,167 +1,279 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
+import React, { useState, useEffect, useCallback } from "react";
+import DeckGL, { FlyToInterpolator, LinearInterpolator } from "deck.gl";
 
-// import { dwellTimeCSV } from "./data/dwell_port_times";
-import { dwell_times_raw } from "./data/dwell_times";
-import { CSVLoader } from "@loaders.gl/csv";
+import { createTheme, makeStyles } from "@material-ui/core/styles";
+import Input from "@material-ui/core/Input";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Chip from "@material-ui/core/Chip";
+
+import "./App.css";
 import MapComponent from "./Components/graphs/Map";
 import LineChartComponent from "./Components/graphs/LineChart";
-import { dwell_times_raw as csv_data } from "./data/dwell_times";
+import green from "@material-ui/core/colors/green";
+import blue from "@material-ui/core/colors/blue";
+import { ThemeProvider } from "@material-ui/core";
+import Box from '@material-ui/core/Box';
 
 
 function App() {
+  const MAP_INITIAL_VIEW_STATE = {
+    longitude: -20.41669,
+    latitude: 45.7853,
+    zoom: 2,
+    minZoom: 1,
+    maxZoom: 12,
+    pitch: 0,
+    bearing: 0,
+  };
 
-  // const [lineChartData, setGridData] = useState([]);
-
-  // const [secret, setSecret] = useState({ value: "", countSecrets: 0 });
-
-  // useEffect(() => {
-  //   const gridData = formatGridData();
-  
-  //   if (!lineChartData) {
-  //     setGridData(gridData);
-  //     console.log(gridData);
-  //     // setGridData(s => ({...s, countSecrets: s.countSecrets + 1}));
-  //   }
-  // }, [lineChartData]);
-
-  // const formatGridData = () => {
-  //   console.log("Firing.. .")
-  //   const list = [];
-  //   const dataStringLines = csv_data.split(/\r\n|\n/);
-  //   const headers = dataStringLines[0].split(
-  //     /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-  //   );
-  
-  //   for (let i = 1; i < dataStringLines.length; i++) {
-  //     const row = dataStringLines[i].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
-  //     if (headers && row.length == headers.length) {
-  //       const obj = {};
-  //       for (let j = 0; j < headers.length; j++) {
-  //         let d = row[j];
-  //         if (d.length > 0) {
-  //           if (d[0] == '"') d = d.substring(1, d.length - 1);
-  //           if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
-  //         }
-  //         if (headers[j]) {
-  //           obj[headers[j]] = d;
-  //         }
-  //       }
-  
-  //       // remove the blank rows
-  //       if (Object.values(obj).filter((x) => x).length > 0) {
-  //         if (obj[`Name`] !== "" && obj[`Longitude`] && obj[`Latitude`]) {
-  //           const newObj = {
-  //             name: obj.Name,
-  //             count: obj.Count,
-  //             coordinates: [parseFloat(obj.Longitude), parseFloat(obj.Latitude)],
-  //             dwell_d: obj[`Median Dwell (days)`],
-  //           };
-  //           list.push(newObj);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   const result = list.reduce(function (r, a) {
-  //     r[a.port_un_locode] = r[a.port_un_locode] || [];
-  //     r[a.port_un_locode].push(a);
-  //     return r;
-  //   }, Object.create(null));
-  //   return result;
-  // };
-
-
-  
  
-  // let data;
-  // let scatterPlotLayer;
-  // const [formattedScatterPlotData, setMapData] = useState([]);
-  // const [isMapLoading, setMapLoading] = useState(true);
 
-//   const formatTimeChartData = () => {
-//     console.log("running time chrt ");
-//     const list = [];
-//     const dataStringLines = dwell_times_raw.split(/\r\n|\n/);
-//     const headers = dataStringLines[0].split(
-//       /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-//     );
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: blue[500],
+      },
+      secondary: {
+        main: blue[800],
+      },
+    },
+  });
 
-//     for (let i = 1; i < dataStringLines.length; i++) {
-//       const row = dataStringLines[i].split(
-//         /,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/
-//       );
-//       if (headers && row.length == headers.length) {
-//         const obj = {};
-//         for (let j = 0; j < headers.length; j++) {
-//           let d = row[j];
-//           if (d.length > 0) {
-//             if (d[0] == '"') d = d.substring(1, d.length - 1);
-//             if (d[d.length - 1] == '"') d = d.substring(d.length - 2, 1);
-//           }
-//           if (headers[j]) {
-//             obj[headers[j]] = d;
-//           }
-//         }
 
-//         // remove the blank rows
-//         if (Object.values(obj).filter((x) => x).length > 0) {
-//           // console.log("obj => ", obj);
-//           // if (obj[`Port Code`] === "USLAX") {
-//           //   console.log("Time obj => ", obj);
-//           // }
-//           // if(obj[`Name`] !== '' && obj[`Longitude`] && obj[`Latitude`]){
-//           //   const newObj = {
-//           //     name: obj.Name,
-//           //     count: obj.Count,
-//           //     coordinates: [parseFloat(obj.Longitude), parseFloat(obj.Latitude)],
-//           //     dwell_d: obj[`Median Dwell (days)`],
-//           //   };
-//           list.push(obj);
-//           // }
-//         }
-//         // Highest Dwell Time
-//         // const maxDwellDays = Math.max.apply(Math, mapData.map(function(o) { return o[`Median Dwell (days)`]; }))
-//       }
-//     }
-//     // setMapLoading(false);
+  const useStyles = makeStyles((theme) => ({
+    selectWrapper : {
+      display:'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    filterLabel: {
+      fontWeight: 800,
+      color: theme.primary
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      maxWidth: 300,
+    },
+    chips: {
+      display: "flex",
+      flexWrap: "wrap",
+    },
+    chip: {
+      margin: 2,
+    },
+    noLabel: {
+      marginTop: theme.spacing(3),
+    },
+  }));
 
-//     /*
-//     category: "container POD discharge to gate-out"
-// departed: "2021-07-02 19:00:00.123"
-// dwell_d: "3.000000"
-// latitude: "46.4"
-// longitude: "-72.383333"
-// name: "Port De Becancour"
-// port_un_locode: "CAVAN"
+  const classes = useStyles();
 
-//     */
-//     const result = list.reduce(function (r, a) {
-//       r[a.port_un_locode] = r[a.port_un_locode] || [];
-//       r[a.port_un_locode].push(a);
-//       return r;
-//     }, Object.create(null));
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
-//     console.log(result);
+  const filterOpt = ["loading", "discharge", "berthing"];
+  const [selectedPort, setSelectedPort] = useState({});
+  const [formatedMapData, setMapData] = useState([]);
+  const [formattedGraphData, setGraphData] = useState([]);
+  const [initialViewState, setInitialViewState] = useState(
+    MAP_INITIAL_VIEW_STATE
+  );
+  const transitionInterpolator = new LinearInterpolator(["bearing"]);
 
-//     return result;
-//   };
+  const [filterList, setFilterList] = useState(["discharge", 'loading']);
+  const [value, setValue] = React.useState([null, null]);
 
-  // const timeChartDataFormatted = formatTimeChartData();
+
+  const postData = async (url = "", data = {}) => {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      // credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  const fetchMyData = async (filters) => {
+    postData("http://localhost:3001/csv", { categoryList: filters }).then(
+      (res) => {
+        // console.log(data); // JSON data parsed by `data.json()` call
+
+        let i = 0;
+        const mapFormattedData = res.reduce(function (r, a) {
+          r[i] = r[i] || {};
+          r[i] = a.value;
+          i++;
+          return r;
+        }, Object.create(null));
+        const resultArr = [];
+        Object.keys(mapFormattedData).map((key) => {
+          resultArr.push(mapFormattedData[key]);
+        });
+        console.log("Data ", resultArr);
+        setGraphData(resultArr);
+        setMapData(resultArr);
+      }
+    );
+  }
+
+  useEffect(() => {
+    fetchMyData(filterList);
+  }, []);
+
+ 
+  const getStyles = (name, personName, theme) => {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  };
+
+  const handleChange = (event) => {
+    setFilterList(event.target.value);
+    fetchMyData(event.target.value);
+  };
+
+  const goToLatLon = useCallback((port) => {
+    setInitialViewState({
+      longitude: port.longitude,
+      latitude: port.latitude,
+      zoom:3,
+      pitch: 0,
+      bearing: 0,
+      transitionDuration: 2000,
+      transitionInterpolator: new FlyToInterpolator(),
+    });
+  }, []);
+
+  // const setMapSelectedPort = useCallback((selectedPort) => {
+    
+  //   console.log("CB => ", selectedPort);
+  //   // setSelectedPort();
+  //   setInitialViewState({
+  //     longitude: selectedPort.longitude,
+  //     latitude: selectedPort.latitude,
+  //     zoom: 6,
+  //     pitch: 0,
+  //     bearing: 0,
+  //     transitionDuration: 3000,
+  //     transitionInterpolator: new FlyToInterpolator(),
+  //   });
+  // }, []);
+
+  const setMapSelectedPort = function(){
+    console.log('CB')
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">Hello World</header>
-      <div className="topGraph">
-        <div className="topGraph--left">
-          <MapComponent />
-        </div>
-        <div className="topGraph--right">Graph Whisker Plot Here</div>
-      </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <header className="App-header">
+          <figure className="App-Logo">
+            <img src="./p44Logo_Blue.png" alt="Project 44" />
+          </figure>
 
-      <div className="bottomGraph">
-        <LineChartComponent/>
+          {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
+      {/* <DateRangePicker
+        startText="Check-in"
+        endText="Check-out"
+        value={value}
+        onChange={(newValue) => {
+          setValue(newValue);
+        }}
+        renderInput={(startProps, endProps) => (
+          <React.Fragment>
+            <TextField {...startProps} />
+            <Box sx={{ mx: 2 }}> to </Box>
+            <TextField {...endProps} />
+          </React.Fragment>
+        )}
+      /> */}
+    {/* </LocalizationProvider> */}
+
+          <div className={classes.selectWrapper}>
+            <label className={classes.filterLabel}>Filter </label>
+            <FormControl className={classes.formControl}>
+              <Select
+                labelId="mutiple-chip-label"
+                id="mutiple-chip"
+                multiple
+                disableUnderline
+                value={filterList}
+                onChange={handleChange}
+                input={<Input id="select-multiple-chip" placeholder="filter" />}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        className={classes.chip}
+                      />
+                    ))}
+                  </div>
+                )}
+                MenuProps={MenuProps}
+              >
+                {filterOpt.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, filterList, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </header>
+        <div className="topGraph">
+          <div className="topGraph--left">
+            <MapComponent
+              selectedPort={selectedPort}
+              dataSource={formatedMapData}
+              onLoad={() => {}}
+              initialView={initialViewState}
+              goToLatLon={setMapSelectedPort}
+            />
+          </div>
+          {/* <div className="topGraph--right">
+            New Chart Here ( Polar )
+            
+          </div> */}
+        </div>
+
+        <div className="bottomGraph">
+          <LineChartComponent
+            selectedPort={selectedPort}
+            dataSource={formattedGraphData}
+            handlePortClicked={goToLatLon}
+          />
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 
