@@ -5,8 +5,8 @@
 .App-Logo {
   position:relative;
   max-width:150px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 .App-Logo img {
   max-width: 100%;
@@ -15,6 +15,7 @@
 .App-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 /* Layout */
 .topGraph {
@@ -69,9 +70,9 @@
 
 .legend-wrapper {
   position: absolute;
-  top: -10%;left:20px;
+  top: -16%;left:40px;
   transform: translate(0, 50%);
-  z-index: 999999;
+  z-index: 7;
   color:white;
   padding: 20px;
   background: rgba(0,0,0,.8);
@@ -107,4 +108,39 @@
 
 select > fieldset {
   border-color: white !important;
+}
+
+.MuiTab-textColorPrimary.Mui-selected {
+  font-size: 20px;
+  transition: all ease 0.25s;
+}
+
+.MuiButtonBase-root.MuiTab-root.Mui-selected {
+  background-color: #eeeeee;;
+}
+
+.MuiChip-root .MuiChip-avatar {
+  color: #ffffff;
+  fill: #ffffff;
+}
+.rs-picker-toggle-wrapper {
+  margin-bottom:20px;
+  font-size: 16px;
+  width: 100%;
+}
+.rs-picker-daterange {
+  border-color: rgba(0,0,0,1);
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.rs-picker-default .rs-picker-toggle {
+  height:56px;
+  line-height:40px;
+}
+
+.rs-picker-toggle-value {
+  font-weight: bold;
+    letter-spacing: .0625rem;
+    font-size: 14px;
 }

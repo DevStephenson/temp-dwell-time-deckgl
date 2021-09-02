@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     filter: {
       color: "white",
       borderColor: "white",
+      paddingLeft: 20
     },
     filterWrap :{
         display: 'flex',
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
         fill: 'white',
     },
     select: {
+
         color: 'white',
         padding: 0,
 
@@ -117,10 +119,44 @@ const MapComponent = React.memo(
     // controls radius
     const [categoryFilter, setCategoryMain] = useState("count");
     // controls color
-    const [categoryFilterSub, setCategoryFilterSub] = useState("maxDwell");
+    const [categoryFilterSub, setCategoryFilterSub] = useState("std");
     const [tooltipInfo, setTooltipInfo] = useState({});
     const [scatterPlotLayer, setScatterPlotLayer] = useState({});
     
+
+  const filterWhitelist = [
+    "std",
+    "count",
+    "medianDwell",
+    "minDwell",
+    "maxDwell",
+    "q25",
+    "q75",
+  ];
+
+  const mapDataKey = (key) => {
+    switch (key) {
+      case "std":
+        return "Standard Deviation";
+      case "count":
+        return "Containers";
+      case "medianDwell":
+        return "Median Dwell ( days )";
+      case "minDwell":
+        return "Min Dwell ( days )";
+      case "maxDwell":
+        return "Max Dwell ( days )";
+      case "q25":
+        return "Quantile 25% Dwell ( days )";
+      case "q75":
+        return "Quantile 75%  Dwell ( days )";
+      default:
+        return key;
+        break;
+    }
+  };
+
+
     const handleColorChange = (event) => {
         const value = event.target.value;
         setCategoryFilterSub(value);
@@ -244,7 +280,7 @@ const MapComponent = React.memo(
           </MapView>
         </DeckGL>
         <div className="legend-wrapper">
-          <h2>Legend</h2>
+          <h2 style={{ marginBottom: 20}}>Legend</h2>
           
           <section className={classes.filterWrap}>
               <p>Color </p>
@@ -265,7 +301,11 @@ const MapComponent = React.memo(
                 className={classes.select}
               >
                 <option aria-label="None" value="" />
-                {Object.keys(dataSource[0] || {}).map((key) => <option value={key}>{key}</option>)}
+                {Object.keys(dataSource[0] || {}).map((key) => <option value={key}>{mapDataKey(key)}</option>)
+                .filter((opt) => {
+                    const isInArr = filterWhitelist.includes(opt.props.value);
+                    return isInArr;
+                  })}
               </Select>
             </FormControl>
           </div>
@@ -321,6 +361,8 @@ const MapComponent = React.memo(
           )}
           </section>
 
+          <hr></hr>
+
           <section className={classes.filterWrap}>
              <p>Size </p> <div className={classes.filter}>
             <FormControl>
@@ -339,7 +381,11 @@ const MapComponent = React.memo(
                 className={classes.select}
               >
                 <option aria-label="None" value="" />
-                {Object.keys(dataSource[0] || {}).map((key) => <option value={key}>{key}</option>)}
+                {Object.keys(dataSource[0] || {}).map((key) => <option value={key}>{mapDataKey(key)}</option>)
+                .filter((opt) => {
+                    const isInArr = filterWhitelist.includes(opt.props.value);
+                    return isInArr;
+                  })}
               </Select>
             </FormControl>
           </div>

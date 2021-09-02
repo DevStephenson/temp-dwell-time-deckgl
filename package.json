@@ -22,6 +22,7 @@
     "react-moment": "^1.1.1",
     "react-scripts": "4.0.3",
     "react-visjs-timeline": "^1.6.0",
+    "rsuite": "^4.10.2",
     "vis-data": "^7.1.2",
     "vis-timeline": "^7.4.9",
     "web-vitals": "^1.0.1"

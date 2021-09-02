@@ -83,13 +83,14 @@ const EnhancedTableRow = React.memo((props) => {
           {row.port_un_locode}
         </TableCell>
 
-        <TableCell component="th" scope="row" style={{ backgroundColor: selectedCategory == "name" ? "rgba(255,255,255,.7)" : "inherit" }}>
+        <TableCell component="th" scope="row" style={{ backgroundColor: selectedCategory == "name" ? "rgba(255,255,255,.7)" : "inherit",  }}>
           {row.name}
         </TableCell>
-        <TableCell align="center" style={{ backgroundColor: selectedCategory == "medianDwell" ? "rgba(255,255,255,.7)" : "inherit" }}>{(row.medianDwell || 0).toFixed(2)}</TableCell>
-
         <TableCell align="center" style={{ backgroundColor: selectedCategory == "count" ? "rgba(255,255,255,.7)" : "inherit" }}>{(row.count || 0)}</TableCell>
-        <TableCell align="center" style={{ backgroundColor: selectedCategory == "std" ? "rgba(255,255,255,.7)" : "inherit" }}>{(row.std || 0).toFixed(2)}</TableCell>
+
+        <TableCell align="center" style={{ backgroundColor: selectedCategory == "medianDwell" ? "rgba(255,255,255,.7)" : "inherit", width: 80}}>{(row.medianDwell || 0).toFixed(2)}</TableCell>
+
+        <TableCell align="center" style={{ backgroundColor: selectedCategory == "std" ? "rgba(255,255,255,.7)" : "inherit" , width: 80  }}>{(row.std || 0).toFixed(2)}</TableCell>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -153,15 +154,16 @@ const EnhancedTableHead = React.memo((props) => {
       label: "Code",
     },
     { id: "name", numeric: false, label: "Name" },
+    
+    {
+      id: "count",
+      numeric: true,
+      label: "Containers",
+    },
     {
       id: "medianDwell",
       numeric: true,
       label: "Median Dwell (days)",
-    },
-    {
-      id: "count",
-      numeric: true,
-      label: "Count",
     },
     {
       id: "std",

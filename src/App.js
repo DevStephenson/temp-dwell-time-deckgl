@@ -9,14 +9,19 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 
 import "./App.css";
+import "./rsuite.default.css";
 import MapComponent from "./Components/graphs/Map";
 import LineChartComponent from "./Components/graphs/LineChart";
-import green from "@material-ui/core/colors/green";
+import red from "@material-ui/core/colors/red";
+import yellow from "@material-ui/core/colors/yellow";
+import gree from "@material-ui/core/colors/green";
 import blue from "@material-ui/core/colors/blue";
 import { ThemeProvider } from "@material-ui/core";
 import Box from '@material-ui/core/Box';
-
-
+import { DateRangePicker } from 'rsuite';
+import UpdateIcon from '@material-ui/icons/Update';
+import DirectionsBoatIcon from '@material-ui/icons/DirectionsBoat';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 function App() {
   const MAP_INITIAL_VIEW_STATE = {
     longitude: -20.41669,
@@ -42,7 +47,7 @@ function App() {
   });
 
 
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles((theme, props) => ({
     selectWrapper : {
       display:'flex',
       alignItems: 'center',
@@ -54,15 +59,30 @@ function App() {
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
-      maxWidth: 300,
+      minWidth: 200,
     },
     chips: {
       display: "flex",
       flexWrap: "wrap",
+      textTransform:'capitalize'
+    },
+    appDetails : {
+      display: "flex",
+      justifyContent: "space-between",
+      paddingLeft: 40,
+      paddingRight: 40
+    },
+    appDetailsDate : {
+      minWidth:300,
+      margin: '20px auto 0'
+    },
+    appDetailsRecordCount : {
+      fontStyle: 'italic'
     },
     chip: {
       margin: 2,
+      height:35,
+      borderRadius: 30
     },
     noLabel: {
       marginTop: theme.spacing(3),
@@ -193,7 +213,7 @@ function App() {
           <figure className="App-Logo">
             <img src="./p44Logo_Blue.png" alt="Project 44" />
           </figure>
-
+          <p className={classes.appDetailsDate}><DateRangePicker placeholder="Select Date Range" showWeekNumbers /></p>
           {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
       {/* <DateRangePicker
         startText="Check-in"
@@ -213,7 +233,7 @@ function App() {
     {/* </LocalizationProvider> */}
 
           <div className={classes.selectWrapper}>
-            <label className={classes.filterLabel}>Filter </label>
+            {/* <label className={classes.filterLabel}>Filter </label> */}
             <FormControl className={classes.formControl}>
               <Select
                 labelId="mutiple-chip-label"
@@ -230,6 +250,8 @@ function App() {
                         key={value}
                         label={value}
                         className={classes.chip}
+                        avatar={value === "berthing" ? <DirectionsBoatIcon/> : value === "loading" ? <UpdateIcon/> : <ExitToAppIcon/> }
+                        style={{ 'svg' : { fill : 'currentColor' }, color: 'white' ,backgroundColor:value === "berthing" ? blue[900] : value === "loading" ? blue[300] : blue[600], color: 'white', letterSpacing:'.06285rem', fontWeight: "bold", fontSize:"14px", paddingLeft: 12, paddingRight:12 }}
                       />
                     ))}
                   </div>
@@ -249,6 +271,11 @@ function App() {
             </FormControl>
           </div>
         </header>
+
+        {/* <div className={classes.appDetails}>
+          <p className={classes.appDetailsDate}><DateRangePicker placeholder="Select Date Range" showWeekNumbers /></p>
+          <p className={classes.appDetailsRecordCount}>512,000 Records</p>
+        </div> */}
         <div className="topGraph">
           <div className="topGraph--left">
             <MapComponent
