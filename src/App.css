@@ -4,12 +4,15 @@
 
 .App-Logo {
   position:relative;
-  max-width:150px;
+  max-width:70px;
   padding-top: 0px;
   padding-bottom: 0px;
 }
-.App-Logo img {
+.App-Logo img ,
+.App-Logo svg  {
   max-width: 100%;
+  width: 100%;
+  /* filter: opacity(1) drop-shadow(0 0 1px #005690); */
 }
 
 .App-header {
@@ -19,10 +22,6 @@
 }
 /* Layout */
 .topGraph {
-  display:flex;
-  flex-direction: row;
-}
-.topGraph--left {
   flex:2 1 100%;
   width: 100%;
   height: 600px;
@@ -70,7 +69,7 @@
 
 .legend-wrapper {
   position: absolute;
-  top: -16%;left:40px;
+  top: 10%;left:40px;
   transform: translate(0, 50%);
   z-index: 7;
   color:white;
@@ -116,7 +115,9 @@ select > fieldset {
 }
 
 .MuiButtonBase-root.MuiTab-root.Mui-selected {
-  background-color: #eeeeee;;
+  background-color: #eeeeee;
+  border: 1px solid rgba(0,0,0,.1);
+  border-bottom: 0;
 }
 
 .MuiChip-root .MuiChip-avatar {
@@ -124,23 +125,338 @@ select > fieldset {
   fill: #ffffff;
 }
 .rs-picker-toggle-wrapper {
-  margin-bottom:20px;
   font-size: 16px;
   width: 100%;
+  
 }
 .rs-picker-daterange {
-  border-color: rgba(0,0,0,1);
-    border: 1px solid;
+    border-color: rgba(0,0,0,.1);
+    /* border: 1px solid; */
     border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    
 }
 
 .rs-picker-default .rs-picker-toggle {
   height:56px;
   line-height:40px;
+  border-radius: 5px;
 }
 
 .rs-picker-toggle-value {
   font-weight: bold;
-    letter-spacing: .0625rem;
-    font-size: 14px;
+  font-size: 16px;
+}
+.rs-picker-toggle-placeholder {
+  font-size: 16px;
+}
+
+.rs-picker-date .rs-picker-toggle.rs-btn, 
+.rs-picker-daterange .rs-picker-toggle.rs-btn,
+.rs-picker-cleanable.rs-picker-date .rs-picker-toggle.rs-btn, 
+.rs-picker-cleanable.rs-picker-daterange .rs-picker-toggle.rs-btn {
+  padding-left:40px;
+}
+.rs-picker-cleanable.rs-picker-date .rs-picker-toggle.rs-btn, 
+.rs-picker-cleanable.rs-picker-daterange .rs-picker-toggle.rs-btn {
+  padding-right:60px;
+}
+
+.rs-picker-date .rs-picker-toggle.rs-btn .rs-picker-toggle-clean, .rs-picker-daterange .rs-picker-toggle.rs-btn .rs-picker-toggle-clean {
+  right:40px;
+}
+.map-wrapper .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.map-wrapper .mapboxgl-popup-content {
+  transition: all 0.3s ease-in-out;
+  background: rgba(0,0,0,.7);
+  border-bottom-color: rgba(0,0,0,.7);
+}
+
+.map-wrapper .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: rgba(0,0,0,.7);
+}
+
+.map-wrapper .mapboxgl-popup-content {
+  border-radius: 4px;
+  color:#ffffff;
+}
+
+.rs-btn.rs-btn-default.rs-picker-toggle .rs-picker-toggle-caret:before {
+  /* content: "" !important; */
+}
+
+.rs-picker-toggle-clean {
+  right: 60px;
+}
+
+.rs-picker-daterange-header {
+  display: none;
+}
+
+.rs-picker-menu {
+  top: 87px !important;
+}
+
+.MuiSelect-select.MuiSelect-select:focus {
+background: transparent !important;
+}
+
+.rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
+  color: #ffffff;
+  border-color: #005690;
+  background-color: #005690;
+}
+
+.rs-picker-toolbar-right-btn-ok {
+  border-color: #005690;
+  background-color: #005690;
+}
+.rs-picker-toolbar-option {
+  color: #005690;
+  padding: 5px 20px;
+}
+/* Fading entrances  */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+.animate__fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+.map-loader {
+  position: absolute;
+  top: 0;left: 0;right: 0;bottom:0;
+  background: rgba(255,255,255,1);
+  z-index: 99999;
+  transition:all ease-in .3s;
+}
+
+.map-loader .content {
+  position: relative;
+  width: 100%;
+  height:100%;
+}
+
+.map-loader .inner_content {
+  position: absolute;
+  top:50%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+}
+
+
+
+/* stylelint
+
+OCEAN LOADER
+
+*/
+.number {
+  font-size:70px;
+    color: white;
+    position: absolute;
+    z-index: 9;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 800;
+}
+.center {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.circle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  cursor:pointer;
+}
+.wave {
+  background-color: #005690;
+  position: absolute;
+  top: 0%;
+  height: 200%;
+  width: 200%;
+  border-radius: 38%;
+  left: -50%;
+  transform: rotate(360deg);
+  transition: all 3s ease;
+  animation: wave 30s linear;
+}
+@keyframes wave {
+  0% { transform: rotate(0deg); top: 50%;}
+  100% { transform: rotate(3600deg); top: 0%;}
+}
+/* .circle:hover .wave {
+  top: 0%;
+} */
+
+
+
+/**
+ * ==============================================
+ * Dot Flashing
+ * ==============================================
+ */
+ .dot-flashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #005690;
+  color: #005690;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: .5s;
+}
+
+.dot-flashing::before, .dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #005690;
+  color: #005690;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #005690;
+  color: #005690;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #005690;
+  }
+  50%,
+  100% {
+    background-color: #94c3e2;
+  }
+}
+
+/**
+ * ==============================================
+ * Dot Floating
+ * ==============================================
+ */
+ .dot-floating {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFloating 3s infinite cubic-bezier(0.15, 0.6, 0.9, 0.1);
+}
+
+.dot-floating::before, .dot-floating::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-floating::before {
+  left: -12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFloatingBefore 3s infinite ease-in-out;
+}
+
+.dot-floating::after {
+  left: -24px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFloatingAfter 3s infinite cubic-bezier(0.4, 0, 1, 1);
+}
+
+@keyframes dotFloating {
+  0% {
+    left: calc(-50% - 5px);
+  }
+  75% {
+    left: calc(50% + 105px);
+  }
+  100% {
+    left: calc(50% + 105px);
+  }
+}
+
+@keyframes dotFloatingBefore {
+  0% {
+    left: -50px;
+  }
+  50% {
+    left: -12px;
+  }
+  75% {
+    left: -50px;
+  }
+  100% {
+    left: -50px;
+  }
+}
+
+@keyframes dotFloatingAfter {
+  0% {
+    left: -100px;
+  }
+  50% {
+    left: -24px;
+  }
+  75% {
+    left: -100px;
+  }
+  100% {
+    left: -100px;
+  }
 }
